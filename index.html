@@ -8,467 +8,193 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Aplikasi Kasir">
-  <meta name="application-name" content="Aplikasi Kasir">
-  <meta name="description" content="Aplikasi Kasir UMKM - Sistem Point of Sales modern untuk toko dan usaha kecil menengah">
-  <meta name="author" content="Program KKN">
+  <meta name="description" content="Aplikasi Kasir UMKM - Sistem POS modern">
   
-  <!-- Open Graph / Social Media -->
-  <meta property="og:title" content="Aplikasi Kasir UMKM">
-  <meta property="og:description" content="Sistem kasir modern untuk UMKM dengan fitur lengkap">
-  <meta property="og:type" content="website">
-  
-  <!-- Resource hints untuk performa -->
   <link rel="preconnect" href="https://script.google.com">
   <link rel="dns-prefetch" href="https://script.google.com">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- PWA Manifest & Icons -->
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icon.svg">
-  <link rel="shortcut icon" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon-192.png">
   
-  <title>Aplikasi Kasir - Sistem POS UMKM</title>
+  <title>Aplikasi Kasir</title>
   
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    
-    html,body{
-      width:100%;
-      height:100%;
-      font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-      background:#f1f5f9;
-      overflow:hidden;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale
-    }
-    
+    html,body{width:100%;height:100%;font-family:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif;background:#f1f5f9;overflow:hidden;-webkit-font-smoothing:antialiased}
     .app{height:100%;display:flex;flex-direction:column}
     
-    /* Topbar dengan gradient maroon */
     .topbar{
-      height:56px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 16px;
-      gap:12px;
+      height:56px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 16px;gap:12px;
       background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#b91c1c 100%);
-      color:#fff;
-      box-shadow:0 2px 12px rgba(127,29,29,.3);
-      z-index:10;
-      position:relative;
-      overflow:hidden
+      color:#fff;box-shadow:0 2px 12px rgba(127,29,29,.3);z-index:10;
+      position:relative;overflow:hidden
     }
-    
     .topbar::before{
-      content:'';
-      position:absolute;
-      inset:0;
+      content:'';position:absolute;inset:0;
       background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.1),transparent 60%);
       pointer-events:none
     }
-    
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:800;
-      letter-spacing:.2px;
-      font-size:16px;
-      z-index:1
-    }
-    
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;z-index:1}
     .brand-logo{
-      width:36px;
-      height:36px;
-      border-radius:10px;
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow:0 2px 8px rgba(0,0,0,.2);
-      overflow:hidden;
-      padding:3px;
-      flex-shrink:0
+      width:36px;height:36px;border-radius:10px;background:#fff;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 8px rgba(0,0,0,.2);overflow:hidden;padding:3px;flex-shrink:0
     }
+    .brand-logo img{width:100%;height:100%;object-fit:contain}
+    .brand-text{display:flex;flex-direction:column;line-height:1.1}
+    .brand-title{font-size:16px;font-weight:800;letter-spacing:-.2px}
+    .brand-subtitle{font-size:11px;opacity:.9;font-weight:500;letter-spacing:.3px;text-transform:uppercase}
     
-    .brand-logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain
-    }
-    
-    .brand-text{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1
-    }
-    
-    .brand-title{
-      font-size:16px;
-      font-weight:800;
-      letter-spacing:-.2px
-    }
-    
-    .brand-subtitle{
-      font-size:11px;
-      opacity:.9;
-      font-weight:500;
-      letter-spacing:.3px;
-      text-transform:uppercase
-    }
-    
-    .topbar-actions{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      z-index:1
-    }
-    
+    .topbar-actions{display:flex;align-items:center;gap:8px;z-index:1}
     .status{
-      font-size:11px;
-      font-weight:600;
-      padding:6px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.18);
-      display:flex;
-      align-items:center;
-      gap:6px;
-      transition:all .3s ease;
-      backdrop-filter:blur(8px)
+      font-size:11px;font-weight:600;padding:6px 12px;border-radius:999px;
+      background:rgba(255,255,255,.18);display:flex;align-items:center;gap:6px;
+      transition:all .3s ease;backdrop-filter:blur(8px)
     }
-    
     .status-dot{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:#4ade80;
-      box-shadow:0 0 10px #4ade80;
-      animation:pulse-dot 2s ease-in-out infinite
+      width:8px;height:8px;border-radius:50%;background:#4ade80;
+      box-shadow:0 0 10px #4ade80;animation:pulse-dot 2s ease-in-out infinite
     }
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.1)}}
+    .status.offline{background:rgba(245,158,11,.95);color:#422006}
+    .status.offline .status-dot{background:#dc2626;box-shadow:0 0 10px #dc2626;animation:none}
     
-    @keyframes pulse-dot{
-      0%,100%{opacity:1;transform:scale(1)}
-      50%{opacity:.7;transform:scale(1.1)}
-    }
+    .frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
+    .frame{border:0;width:100%;height:100%;background:#fff}
     
-    .status.offline{
-      background:rgba(245,158,11,.95);
-      color:#422006
-    }
-    
-    .status.offline .status-dot{
-      background:#dc2626;
-      box-shadow:0 0 10px #dc2626;
-      animation:none
-    }
-    
-    .open-new-tab{
-      font-size:11px;
-      font-weight:600;
-      padding:8px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.18);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.25);
-      text-decoration:none;
-      display:flex;
-      align-items:center;
-      gap:5px;
-      transition:all .2s ease;
-      backdrop-filter:blur(8px)
-    }
-    
-    .open-new-tab:hover{
-      background:rgba(255,255,255,.28);
-      transform:translateY(-1px)
-    }
-    
-    .open-new-tab:active{
-      transform:translateY(0)
-    }
-    
-    /* Frame wrapper */
-    .frame-wrap{
-      flex:1;
-      position:relative;
-      background:#fff;
-      overflow:hidden
-    }
-    
-    .frame{
-      border:0;
-      width:100%;
-      height:100%;
-      background:#fff
-    }
-    
-    /* Loading screen */
     .loader{
-      position:absolute;
-      inset:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:24px;
-      background:linear-gradient(135deg,#f8fafc 0%,#fef2f2 100%);
-      z-index:5;
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:24px;
+      background:linear-gradient(135deg,#f8fafc 0%,#fef2f2 100%);z-index:5;
       transition:opacity .5s ease,visibility .5s ease
     }
-    
-    .loader.hidden{
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none
-    }
-    
+    .loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
     .loader-logo{
-      width:80px;
-      height:80px;
-      border-radius:20px;
-      background:#fff;
+      width:80px;height:80px;border-radius:20px;background:#fff;
       box-shadow:0 10px 30px rgba(127,29,29,.2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:8px;
+      display:flex;align-items:center;justify-content:center;padding:8px;
       animation:float 3s ease-in-out infinite
     }
-    
-    @keyframes float{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-8px)}
-    }
-    
-    .loader-logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain
-    }
-    
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .loader-logo img{width:100%;height:100%;object-fit:contain}
     .loader-spinner{
-      width:36px;
-      height:36px;
-      border-radius:50%;
-      border:3px solid #fecaca;
-      border-top-color:#7f1d1d;
-      animation:spin .8s linear infinite
+      width:36px;height:36px;border-radius:50%;
+      border:3px solid #fecaca;border-top-color:#7f1d1d;animation:spin .8s linear infinite
     }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loader-text{color:#7f1d1d;font-weight:700;font-size:15px;letter-spacing:-.2px}
+    .loader-sub{color:#64748b;font-size:13px;margin-top:-8px}
     
-    @keyframes spin{
-      to{transform:rotate(360deg)}
-    }
-    
-    .loader-text{
-      color:#7f1d1d;
-      font-weight:700;
-      font-size:15px;
-      letter-spacing:-.2px
-    }
-    
-    .loader-sub{
-      color:#64748b;
-      font-size:13px;
-      margin-top:-8px
-    }
-    
-    /* Error card */
     .error-card{
-      background:#fff;
-      border:1px solid #fecaca;
-      border-radius:20px;
-      padding:28px;
-      max-width:440px;
-      box-shadow:0 15px 40px rgba(127,29,29,.15);
-      text-align:center;
-      display:none
+      background:#fff;border:1px solid #fecaca;border-radius:20px;
+      padding:28px;max-width:440px;box-shadow:0 15px 40px rgba(127,29,29,.15);
+      text-align:center;display:none
     }
-    
-    .error-card.show{
-      display:block;
-      animation:slideUp .4s ease
-    }
-    
-    @keyframes slideUp{
-      from{opacity:0;transform:translate(-50%,-40%)}
-      to{opacity:1;transform:translate(-50%,-50%)}
-    }
-    
+    .error-card.show{display:block;animation:slideUp .4s ease}
+    @keyframes slideUp{from{opacity:0;transform:translate(-50%,-40%)}to{opacity:1;transform:translate(-50%,-50%)}}
     .error-icon{
-      width:64px;
-      height:64px;
-      margin:0 auto 16px;
-      border-radius:50%;
-      background:#fef2f2;
-      color:#991b1b;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:32px
+      width:64px;height:64px;margin:0 auto 16px;border-radius:50%;
+      background:#fef2f2;color:#991b1b;display:flex;align-items:center;justify-content:center;font-size:32px
     }
-    
-    .error-title{
-      color:#7f1d1d;
-      font-size:20px;
-      font-weight:800;
-      margin-bottom:8px;
-      letter-spacing:-.3px
-    }
-    
-    .error-msg{
-      color:#64748b;
-      font-size:14px;
-      line-height:1.6;
-      margin-bottom:20px
-    }
-    
-    .error-actions{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap
-    }
+    .error-title{color:#7f1d1d;font-size:20px;font-weight:800;margin-bottom:8px}
+    .error-msg{color:#64748b;font-size:14px;line-height:1.6;margin-bottom:20px}
+    .error-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
     
     .btn{
-      padding:12px 20px;
-      border-radius:12px;
-      font-size:14px;
-      font-weight:700;
-      text-decoration:none;
-      border:0;
-      cursor:pointer;
-      transition:all .2s ease;
-      display:inline-flex;
-      align-items:center;
-      gap:8px
+      padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;
+      text-decoration:none;border:0;cursor:pointer;transition:all .2s ease;
+      display:inline-flex;align-items:center;gap:8px
     }
-    
-    .btn:active{
-      transform:scale(.97)
-    }
-    
+    .btn:active{transform:scale(.97)}
     .btn-primary{
-      background:linear-gradient(135deg,#7f1d1d,#991b1b);
-      color:#fff;
+      background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;
       box-shadow:0 4px 12px rgba(127,29,29,.3)
     }
+    .btn-primary:hover{background:linear-gradient(135deg,#991b1b,#b91c1c);transform:translateY(-1px)}
+    .btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+    .btn-secondary:hover{background:#e2e8f0;transform:translateY(-1px)}
     
-    .btn-primary:hover{
-      background:linear-gradient(135deg,#991b1b,#b91c1c);
-      box-shadow:0 6px 16px rgba(127,29,29,.4);
-      transform:translateY(-1px)
-    }
-    
-    .btn-secondary{
-      background:#f1f5f9;
-      color:#475569;
-      border:1px solid #e2e8f0
-    }
-    
-    .btn-secondary:hover{
-      background:#e2e8f0;
-      transform:translateY(-1px)
-    }
-    
-    /* Install button */
+    /* Tombol Install PWA */
     .install{
-      display:none;
-      position:fixed;
-      right:16px;
-      bottom:18px;
-      border:0;
-      border-radius:16px;
-      padding:14px 20px;
-      background:linear-gradient(135deg,#7f1d1d,#991b1b);
-      color:#fff;
-      font-weight:800;
-      font-size:14px;
-      box-shadow:0 10px 30px rgba(127,29,29,.4);
-      z-index:20;
-      cursor:pointer;
-      transition:all .3s ease;
-      align-items:center;
-      gap:8px;
-      letter-spacing:-.2px
+      display:none;position:fixed;right:16px;bottom:18px;
+      border:0;border-radius:16px;padding:14px 20px;
+      background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;
+      font-weight:800;font-size:14px;box-shadow:0 10px 30px rgba(127,29,29,.4);
+      z-index:20;cursor:pointer;transition:all .3s ease;
+      align-items:center;gap:8px;letter-spacing:-.2px
     }
+    .install:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(127,29,29,.5)}
+    .install.show{display:flex;animation:slideIn .5s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     
-    .install:hover{
-      transform:translateY(-3px);
-      box-shadow:0 15px 40px rgba(127,29,29,.5)
+    /* Tombol Panduan Install Manual (Fallback) */
+    .install-help{
+      display:none;position:fixed;right:16px;bottom:18px;
+      border:0;border-radius:16px;padding:14px 20px;
+      background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;
+      font-weight:800;font-size:14px;box-shadow:0 10px 30px rgba(245,158,11,.4);
+      z-index:20;cursor:pointer;align-items:center;gap:8px
     }
+    .install-help.show{display:flex;animation:slideIn .5s ease}
     
-    .install:active{
-      transform:translateY(-1px)
+    /* Modal Panduan Install */
+    .help-modal{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+      z-index:100;align-items:center;justify-content:center;padding:16px;
+      backdrop-filter:blur(4px)
     }
-    
-    .install.show{
-      display:flex;
-      animation:slideIn .5s ease
+    .help-modal.show{display:flex;animation:fadeIn .2s ease}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .help-content{
+      background:#fff;border-radius:20px;padding:24px;max-width:420px;width:100%;
+      box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto
     }
-    
-    @keyframes slideIn{
-      from{opacity:0;transform:translateY(20px)}
-      to{opacity:1;transform:translateY(0)}
+    .help-title{color:#7f1d1d;font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .help-section{margin-bottom:20px}
+    .help-section h4{color:#1e293b;font-size:15px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .help-steps{list-style:none;padding:0}
+    .help-steps li{
+      padding:10px 12px;background:#f8fafc;border-radius:10px;margin-bottom:8px;
+      font-size:13px;color:#334155;display:flex;gap:10px;align-items:flex-start
     }
+    .help-steps li .step-num{
+      flex-shrink:0;width:24px;height:24px;border-radius:50%;
+      background:#7f1d1d;color:#fff;display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:12px
+    }
+    .help-close{
+      width:100%;padding:12px;border-radius:12px;border:0;
+      background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;
+      font-weight:700;font-size:14px;cursor:pointer
+    }
+    .help-tabs{display:flex;gap:6px;margin-bottom:16px}
+    .help-tab{
+      flex:1;padding:10px;border-radius:10px;border:1px solid #e2e8f0;
+      background:#f8fafc;font-size:13px;font-weight:600;cursor:pointer;
+      transition:all .2s ease;color:#64748b
+    }
+    .help-tab.active{background:#7f1d1d;color:#fff;border-color:#7f1d1d}
+    .help-tab-content{display:none}
+    .help-tab-content.active{display:block}
     
-    /* Mobile responsive */
     @media (max-width:480px){
       .brand-subtitle{display:none}
       .brand-title{font-size:15px}
       .brand-logo{width:32px;height:32px}
-      
-      .open-new-tab span:last-child{display:none}
-      .open-new-tab{padding:8px 12px}
-      
-      .install{
-        right:12px;
-        bottom:12px;
-        padding:12px 16px;
-        font-size:13px
-      }
-      
+      .install,.install-help{right:12px;bottom:12px;padding:12px 16px;font-size:13px}
       .topbar{padding:0 12px}
-    }
-    
-    /* Tablet */
-    @media (min-width:768px) and (max-width:1024px){
-      .topbar{padding:0 24px}
-      .brand-title{font-size:17px}
-    }
-    
-    /* Dark mode support */
-    @media (prefers-color-scheme:dark){
-      html,body{background:#0f172a}
-      .loader{background:linear-gradient(135deg,#1e293b 0%,#1c1917 100%)}
-      .loader-text{color:#fecaca}
-      .loader-sub{color:#94a3b8}
-    }
-    
-    /* Reduced motion */
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        animation-duration:.01ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.01ms !important
-      }
     }
   </style>
 </head>
 <body>
-  <main class="app" role="main">
-    <!-- Topbar -->
-    <header class="topbar" role="banner">
+  <main class="app">
+    <header class="topbar">
       <div class="brand">
-        <div class="brand-logo" aria-hidden="true">
-          <img src="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r" 
-               alt="Logo Aplikasi Kasir" 
-               onerror="this.parentElement.innerHTML='🏪'">
+        <div class="brand-logo">
+          <img src="./icon.svg" alt="Logo" onerror="this.parentElement.innerHTML='🏪'">
         </div>
         <div class="brand-text">
           <span class="brand-title">Aplikasi Kasir</span>
@@ -477,213 +203,189 @@
       </div>
       
       <div class="topbar-actions">
-        <a href="#" 
-           id="openNewTab" 
-           class="open-new-tab" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           aria-label="Buka aplikasi di tab baru">
-          <span aria-hidden="true">🔗</span>
-          <span>Tab Baru</span>
-        </a>
-        
-        <span id="status" class="status" role="status" aria-live="polite">
-          <span class="status-dot" aria-hidden="true"></span>
+        <span id="status" class="status">
+          <span class="status-dot"></span>
           <span>Menghubungkan...</span>
         </span>
       </div>
     </header>
 
-    <!-- Main content area -->
     <div class="frame-wrap">
-      <!-- Loading screen -->
-      <div id="loader" class="loader" role="alert" aria-busy="true" aria-label="Memuat aplikasi">
-        <div class="loader-logo" aria-hidden="true">
-          <img src="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r" 
-               alt="" 
-               onerror="this.parentElement.innerHTML='🏪'">
+      <div id="loader" class="loader">
+        <div class="loader-logo">
+          <img src="./icon.svg" alt="" onerror="this.parentElement.innerHTML='🏪'">
         </div>
-        <div class="loader-spinner" aria-hidden="true"></div>
+        <div class="loader-spinner"></div>
         <div class="loader-text">Memuat Aplikasi Kasir...</div>
         <div class="loader-sub">Mohon tunggu sebentar</div>
       </div>
 
-      <!-- Error card -->
-      <div id="errorCard" 
-           class="error-card" 
-           role="alert"
-           style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px)">
-        <div class="error-icon" aria-hidden="true">⚠️</div>
+      <div id="errorCard" class="error-card" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px)">
+        <div class="error-icon">⚠️</div>
         <div class="error-title">Aplikasi tidak dapat dimuat</div>
-        <div class="error-msg">
-          Kemungkinan koneksi internet bermasalah atau server sedang sibuk. 
-          Silakan coba lagi atau buka di tab baru.
-        </div>
+        <div class="error-msg">Koneksi internet bermasalah atau server sedang sibuk. Silakan coba lagi.</div>
         <div class="error-actions">
-          <button class="btn btn-primary" 
-                  onclick="location.reload()"
-                  aria-label="Coba muat ulang aplikasi">
-            🔄 Coba Lagi
-          </button>
-          <a id="errorOpenTab" 
-             class="btn btn-secondary" 
-             href="#" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             aria-label="Buka aplikasi di tab baru">
-            🔗 Buka Tab Baru
-          </a>
+          <button class="btn btn-primary" onclick="location.reload()">🔄 Coba Lagi</button>
         </div>
       </div>
 
-      <!-- Iframe untuk aplikasi -->
-      <iframe id="appFrame" 
-              class="frame" 
-              title="Aplikasi Kasir UMKM" 
-              allow="camera; microphone; geolocation"
-              aria-label="Aplikasi Kasir">
-      </iframe>
+      <iframe id="appFrame" class="frame" title="Aplikasi Kasir" allow="camera; microphone; geolocation"></iframe>
     </div>
   </main>
 
-  <!-- Install PWA button -->
-  <button id="install" 
-          class="install"
-          aria-label="Install aplikasi ke perangkat">
-    <span aria-hidden="true">📲</span>
+  <!-- Tombol Install Otomatis (PWA) -->
+  <button id="install" class="install">
+    <span>📲</span>
     <span>Install Aplikasi</span>
   </button>
 
+  <!-- Tombol Fallback: Panduan Install Manual -->
+  <button id="installHelp" class="install-help" onclick="showInstallHelp()">
+    <span>📱</span>
+    <span>Cara Install</span>
+  </button>
+
+  <!-- Modal Panduan Install -->
+  <div id="helpModal" class="help-modal">
+    <div class="help-content">
+      <div class="help-title">📱 Cara Install Aplikasi</div>
+      
+      <div class="help-tabs">
+        <button class="help-tab active" onclick="switchTab('android')">Android</button>
+        <button class="help-tab" onclick="switchTab('ios')">iPhone</button>
+        <button class="help-tab" onclick="switchTab('desktop')">Komputer</button>
+      </div>
+
+      <!-- Android -->
+      <div id="tab-android" class="help-tab-content active">
+        <div class="help-section">
+          <h4>🤖 Untuk Android (Chrome)</h4>
+          <ul class="help-steps">
+            <li><span class="step-num">1</span><span>Buka aplikasi ini di <strong>Google Chrome</strong></span></li>
+            <li><span class="step-num">2</span><span>Ketuk <strong>titik tiga ⋮</strong> di pojok kanan atas browser</span></li>
+            <li><span class="step-num">3</span><span>Pilih <strong>"Add to Home screen"</strong> atau <strong>"Install app"</strong></span></li>
+            <li><span class="step-num">4</span><span>Ketuk <strong>"Add"</strong> untuk konfirmasi</span></li>
+            <li><span class="step-num">5</span><span>Ikon 🏪 akan muncul di layar utama HP Anda!</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- iOS -->
+      <div id="tab-ios" class="help-tab-content">
+        <div class="help-section">
+          <h4>🍎 Untuk iPhone/iPad (Safari)</h4>
+          <ul class="help-steps">
+            <li><span class="step-num">1</span><span>Buka aplikasi ini di <strong>Safari</strong> (bukan Chrome)</span></li>
+            <li><span class="step-num">2</span><span>Ketuk ikon <strong>Share</strong> (kotak dengan panah ke atas) di bawah</span></li>
+            <li><span class="step-num">3</span><span>Scroll ke bawah, pilih <strong>"Add to Home Screen"</strong></span></li>
+            <li><span class="step-num">4</span><span>Ketuk <strong>"Add"</strong> di pojok kanan atas</span></li>
+            <li><span class="step-num">5</span><span>Aplikasi siap dipakai seperti aplikasi native!</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Desktop -->
+      <div id="tab-desktop" class="help-tab-content">
+        <div class="help-section">
+          <h4>💻 Untuk Komputer (Chrome/Edge)</h4>
+          <ul class="help-steps">
+            <li><span class="step-num">1</span><span>Buka aplikasi ini di <strong>Chrome atau Edge</strong></span></li>
+            <li><span class="step-num">2</span><span>Klik ikon <strong>📥 Install</strong> di kanan address bar</span></li>
+            <li><span class="step-num">3</span><span>Atau klik titik tiga ⋮ → <strong>"Install Aplikasi"</strong></span></li>
+            <li><span class="step-num">4</span><span>Klik <strong>"Install"</strong> di dialog yang muncul</span></li>
+            <li><span class="step-num">5</span><span>Aplikasi akan muncul di desktop/start menu!</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <button class="help-close" onclick="closeInstallHelp()">✓ Mengerti, Tutup</button>
+    </div>
+  </div>
+
   <script>
-    // Konfigurasi
     const CONFIG = {
       APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxV7-A-zND8NgGypWPSNu5mJSCrNLKVbgHhpcnCkG0jQWTlOML9mMl3SsEf5Q-mNl4tig/exec',
-      LOAD_TIMEOUT: 20000, // 20 detik
-      RETRY_DELAY: 3000,   // 3 detik
-      SW_UPDATE_INTERVAL: 5 * 60 * 1000 // 5 menit
+      LOAD_TIMEOUT: 20000,
+      RETRY_DELAY: 3000,
+      SW_UPDATE_INTERVAL: 5 * 60 * 1000,
+      INSTALL_HELP_DELAY: 8000 // Tampilkan tombol bantuan setelah 8 detik jika PWA tidak muncul
     };
 
-    // DOM Elements
     const elements = {
       frame: document.getElementById('appFrame'),
       statusEl: document.getElementById('status'),
       loader: document.getElementById('loader'),
       errorCard: document.getElementById('errorCard'),
-      openNewTab: document.getElementById('openNewTab'),
-      errorOpenTab: document.getElementById('errorOpenTab'),
-      installBtn: document.getElementById('install')
+      installBtn: document.getElementById('install'),
+      installHelp: document.getElementById('installHelp'),
+      helpModal: document.getElementById('helpModal')
     };
 
-    // State
     let loadTimeout = null;
     let deferredPrompt = null;
     let isLoading = true;
+    let pwaInstallable = false;
 
-    // Inisialisasi
     function init() {
-      // Set URL untuk tombol
-      elements.openNewTab.href = CONFIG.APPS_SCRIPT_URL;
-      elements.errorOpenTab.href = CONFIG.APPS_SCRIPT_URL;
-
-      // Load aplikasi
       loadApp();
-
-      // Setup event listeners
       setupEventListeners();
-
-      // Setup Service Worker
       setupServiceWorker();
-
-      // Setup PWA Install
       setupPWAInstall();
-
-      // Update status awal
       updateStatus();
     }
 
-    // Load aplikasi
     function loadApp() {
       isLoading = true;
       elements.frame.src = CONFIG.APPS_SCRIPT_URL;
-      
-      // Set timeout
       loadTimeout = setTimeout(() => {
-        if (isLoading) {
-          showError();
-        }
+        if (isLoading) showError();
       }, CONFIG.LOAD_TIMEOUT);
     }
 
-    // Setup event listeners
     function setupEventListeners() {
-      // Frame loaded
       elements.frame.addEventListener('load', () => {
         isLoading = false;
         elements.loader.classList.add('hidden');
-        elements.loader.setAttribute('aria-busy', 'false');
-        
         if (loadTimeout) {
           clearTimeout(loadTimeout);
           loadTimeout = null;
         }
       });
-
-      // Online/Offline events
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', handleOffline);
     }
 
-    // Handle online
     function handleOnline() {
       updateStatus();
-      
-      // Auto-retry jika sebelumnya error
       if (elements.errorCard.classList.contains('show')) {
         elements.errorCard.classList.remove('show');
         elements.loader.classList.remove('hidden');
-        elements.loader.setAttribute('aria-busy', 'true');
-        
-        setTimeout(() => {
-          loadApp();
-        }, CONFIG.RETRY_DELAY);
+        setTimeout(() => loadApp(), CONFIG.RETRY_DELAY);
       }
     }
 
-    // Handle offline
-    function handleOffline() {
-      updateStatus();
-    }
+    function handleOffline() { updateStatus(); }
 
-    // Update status online/offline
     function updateStatus() {
       const online = navigator.onLine;
       const textEl = elements.statusEl.querySelector('span:last-child');
-      
-      if (textEl) {
-        textEl.textContent = online ? 'Online' : 'Offline';
-      }
-      
+      if (textEl) textEl.textContent = online ? 'Online' : 'Offline';
       elements.statusEl.classList.toggle('offline', !online);
-      elements.statusEl.setAttribute('aria-label', online ? 'Status: Online' : 'Status: Offline');
     }
 
-    // Show error
     function showError() {
       isLoading = false;
       elements.loader.classList.add('hidden');
-      elements.loader.setAttribute('aria-busy', 'false');
       elements.errorCard.classList.add('show');
-      
       if (loadTimeout) {
         clearTimeout(loadTimeout);
         loadTimeout = null;
       }
     }
 
-    // Setup Service Worker
     function setupServiceWorker() {
       if (!('serviceWorker' in navigator)) {
-        console.warn('Service Worker tidak didukung');
+        console.warn('⚠️ Service Worker tidak didukung browser ini');
         return;
       }
 
@@ -692,65 +394,111 @@
           const registration = await navigator.serviceWorker.register('./sw.js', {
             updateViaCache: 'none'
           });
-
-          console.log('Service Worker terdaftar:', registration.scope);
-
-          // Auto-update setiap interval
-          setInterval(() => {
-            registration.update();
-          }, CONFIG.SW_UPDATE_INTERVAL);
-
-          // Handle controller change
+          console.log('✅ Service Worker terdaftar:', registration.scope);
+          setInterval(() => registration.update(), CONFIG.SW_UPDATE_INTERVAL);
+          
           let reloading = false;
           navigator.serviceWorker.addEventListener('controllerchange', () => {
             if (reloading) return;
             reloading = true;
             window.location.reload();
           });
-
         } catch (error) {
-          console.warn('Gagal mendaftarkan Service Worker:', error);
+          console.warn('⚠️ Gagal mendaftarkan Service Worker:', error);
         }
       });
     }
 
-    // Setup PWA Install
     function setupPWAInstall() {
+      // Event saat browser mendukung install PWA
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        pwaInstallable = true;
         elements.installBtn.classList.add('show');
-        
-        console.log('PWA install prompt tersedia');
+        elements.installHelp.classList.remove('show'); // Sembunyikan bantuan jika PWA auto-install muncul
+        console.log('✅ PWA Install Prompt tersedia!');
       });
 
       elements.installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) {
-          console.warn('Install prompt tidak tersedia');
+          showInstallHelp(); // Fallback ke panduan manual
           return;
         }
-
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        
         console.log('User response:', outcome);
-        
         if (outcome === 'accepted') {
           elements.installBtn.classList.remove('show');
         }
-        
         deferredPrompt = null;
       });
 
-      // Hide install button setelah ter-install
       window.addEventListener('appinstalled', () => {
-        console.log('PWA berhasil diinstall');
+        console.log('🎉 PWA berhasil diinstall!');
         elements.installBtn.classList.remove('show');
+        elements.installHelp.classList.remove('show');
         deferredPrompt = null;
+        // Tampilkan toast sukses
+        showSuccessToast('🎉 Aplikasi berhasil diinstall! Buka dari ikon di layar utama.');
       });
+
+      // Fallback: Jika dalam 8 detik tombol install tidak muncul, tampilkan tombol bantuan
+      setTimeout(() => {
+        if (!pwaInstallable && !elements.installBtn.classList.contains('show')) {
+          console.log('ℹ️ Menampilkan tombol bantuan install manual');
+          elements.installHelp.classList.add('show');
+        }
+      }, CONFIG.INSTALL_HELP_DELAY);
+
+      // Cek apakah sudah terinstall (PWA mode)
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        console.log('📱 Aplikasi berjalan dalam mode standalone (sudah terinstall)');
+        // Jangan tampilkan tombol apapun
+      }
     }
 
-    // Start app
+    // ===== Fungsi Modal Bantuan =====
+    function showInstallHelp() {
+      elements.helpModal.classList.add('show');
+    }
+
+    function closeInstallHelp() {
+      elements.helpModal.classList.remove('show');
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.help-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.help-tab-content').forEach(c => c.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+    }
+
+    // Toast notifikasi sederhana
+    function showSuccessToast(msg) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position:fixed;top:20px;left:50%;transform:translateX(-50%);
+        background:linear-gradient(135deg,#10b981,#059669);color:#fff;
+        padding:14px 20px;border-radius:12px;font-weight:600;font-size:14px;
+        box-shadow:0 10px 30px rgba(16,185,129,.4);z-index:9999;
+        animation:slideDown .3s ease;
+      `;
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity .3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // Tutup modal jika klik di luar
+    elements.helpModal.addEventListener('click', (e) => {
+      if (e.target === elements.helpModal) closeInstallHelp();
+    });
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
