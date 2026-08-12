@@ -7,11 +7,11 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Sistem Point of Sales UMKM - Program KKN">
+  <meta name="description" content="Sistem Kasir untuk UMKM - Program KKN">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icon.svg">
-  <title>POS UMKM - KKN</title>
+  <title>Kasir - KKN</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f1f5f9;overflow:hidden;-webkit-font-smoothing:antialiased}
@@ -115,7 +115,7 @@
       box-shadow:0 8px 24px rgba(127,29,29,.35);
       z-index:5;cursor:pointer;
       transition:transform .2s ease,box-shadow .2s ease;
-      display:none;align-items:center;gap:8px
+      align-items:center;gap:8px
     }
     .install:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(127,29,29,.45)}
     .install.show{display:flex}
@@ -135,7 +135,7 @@
           <img src="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r" alt="Logo KKN" onerror="this.parentElement.innerHTML='🏪'">
         </div>
         <div class="brand-text">
-          <span class="brand-title">POS UMKM</span>
+          <span class="brand-title">Kasir</span>
           <span class="brand-subtitle">Program KKN</span>
         </div>
       </div>
@@ -170,7 +170,7 @@
         </div>
       </div>
 
-      <iframe id="appFrame" class="frame" title="POS UMKM" allow="camera; microphone; geolocation"></iframe>
+      <iframe id="appFrame" class="frame" title="Kasir" allow="camera; microphone; geolocation"></iframe>
     </div>
   </main>
 
@@ -180,9 +180,8 @@
   </button>
 
   <script>
-    // ⚠️ GANTI URL INI dengan URL Web App Apps Script terbaru Anda
-    // (Deploy → Manage deployments → Copy URL)
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz2wWC1rPQH5NGyMUI4-dmSA8oECg7j0OA8APopMOpLUlzZnjj9G8GfL1C8Fb1h1rilRg/exec';
+    // ⚠️ URL Web App Apps Script terbaru Anda sudah diperbarui
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxnrVlfxtx76TnlHoCurufVTkJ3WrYxQPjBiq3DCqBeXN6mq17TscZeHDQxoMB7NCrZUA/exec';
 
     const frame = document.getElementById('appFrame');
     const statusEl = document.getElementById('status');
@@ -233,10 +232,18 @@
     window.addEventListener('offline', updateStatus);
     updateStatus();
 
-    // Register service worker
+    // Register service worker dengan auto-update
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(err => {
-        console.warn('SW registration failed:', err);
+      window.addEventListener('load', async () => {
+        const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+        // Cek update otomatis tiap 5 menit walau aplikasi tidak ditutup
+        setInterval(() => reg.update(), 5 * 60 * 1000);
+      });
+      let reloading = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloading) return;
+        reloading = true;
+        window.location.reload();
       });
     }
 
