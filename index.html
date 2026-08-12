@@ -3,39 +3,267 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#7f1d1d">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Sistem Point of Sales UMKM - Program KKN">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <title>POS UMKM</title>
+  <link rel="apple-touch-icon" href="./icon.svg">
+  <title>POS UMKM - KKN</title>
   <style>
-    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f1f5f9}body{overflow:hidden}.app{height:100%;display:flex;flex-direction:column}.topbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#2563eb;color:#fff;box-shadow:0 2px 12px #0f172a33;z-index:2}.brand{font-weight:800;letter-spacing:.2px}.status{font-size:12px;opacity:.9}.offline{background:#f59e0b;color:#422006}.frame{border:0;flex:1;width:100%;background:#fff}.install{display:none;position:fixed;right:16px;bottom:18px;border:0;border-radius:14px;padding:13px 16px;background:#2563eb;color:white;font-weight:800;box-shadow:0 8px 24px #2563eb55;z-index:5}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f1f5f9;overflow:hidden;-webkit-font-smoothing:antialiased}
+    .app{height:100%;display:flex;flex-direction:column}
+    .topbar{
+      height:56px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 16px;gap:12px;
+      background:linear-gradient(90deg,#7f1d1d,#991b1b);
+      color:#fff;box-shadow:0 2px 12px rgba(127,29,29,.3);z-index:2;
+      position:relative;overflow:hidden
+    }
+    .topbar::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.08),transparent 60%);
+      pointer-events:none
+    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px;font-size:16px;z-index:1}
+    .brand-logo{
+      width:32px;height:32px;border-radius:8px;background:#fff;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 6px rgba(0,0,0,.2);overflow:hidden;padding:2px
+    }
+    .brand-logo img{width:100%;height:100%;object-fit:contain}
+    .brand-text{display:flex;flex-direction:column;line-height:1.1}
+    .brand-title{font-size:15px;font-weight:800}
+    .brand-subtitle{font-size:10px;opacity:.85;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+    .topbar-actions{display:flex;align-items:center;gap:8px;z-index:1}
+    .status{
+      font-size:11px;font-weight:600;
+      padding:6px 10px;border-radius:999px;
+      background:rgba(255,255,255,.18);
+      display:flex;align-items:center;gap:6px;
+      transition:all .2s ease
+    }
+    .status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80}
+    .status.offline{background:rgba(245,158,11,.95);color:#422006}
+    .status.offline .status-dot{background:#dc2626;box-shadow:0 0 8px #dc2626}
+    .open-new-tab{
+      font-size:11px;font-weight:600;
+      padding:6px 12px;border-radius:999px;
+      background:rgba(255,255,255,.18);color:#fff;
+      border:1px solid rgba(255,255,255,.25);
+      text-decoration:none;display:flex;align-items:center;gap:4px;
+      transition:all .2s ease
+    }
+    .open-new-tab:hover{background:rgba(255,255,255,.28)}
+    .frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
+    .frame{border:0;width:100%;height:100%;background:#fff}
+    .loader{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:20px;
+      background:linear-gradient(135deg,#f8fafc,#fef2f2);
+      z-index:1;transition:opacity .4s ease,visibility .4s ease
+    }
+    .loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .loader-logo{
+      width:72px;height:72px;border-radius:18px;background:#fff;
+      box-shadow:0 8px 24px rgba(127,29,29,.15);
+      display:flex;align-items:center;justify-content:center;
+      padding:6px;animation:pulse 2s ease-in-out infinite
+    }
+    .loader-logo img{width:100%;height:100%;object-fit:contain}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .loader-spinner{
+      width:32px;height:32px;border-radius:50%;
+      border:3px solid #fecaca;border-top-color:#7f1d1d;
+      animation:spin .8s linear infinite
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loader-text{color:#7f1d1d;font-weight:600;font-size:14px}
+    .loader-sub{color:#64748b;font-size:12px;margin-top:-12px}
+    .error-card{
+      background:#fff;border:1px solid #fecaca;border-radius:16px;
+      padding:24px;max-width:420px;box-shadow:0 12px 30px rgba(127,29,29,.12);
+      text-align:center;display:none
+    }
+    .error-card.show{display:block}
+    .error-icon{
+      width:56px;height:56px;margin:0 auto 12px;border-radius:50%;
+      background:#fef2f2;color:#991b1b;
+      display:flex;align-items:center;justify-content:center;
+      font-size:28px
+    }
+    .error-title{color:#7f1d1d;font-size:18px;font-weight:700;margin-bottom:6px}
+    .error-msg{color:#64748b;font-size:13px;line-height:1.6;margin-bottom:16px}
+    .error-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .btn{
+      padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;
+      text-decoration:none;border:0;cursor:pointer;transition:all .2s ease;
+      display:inline-flex;align-items:center;gap:6px
+    }
+    .btn-primary{background:#7f1d1d;color:#fff}
+    .btn-primary:hover{background:#991b1b}
+    .btn-secondary{background:#f1f5f9;color:#475569}
+    .btn-secondary:hover{background:#e2e8f0}
+    .install{
+      display:none;position:fixed;right:16px;bottom:18px;
+      border:0;border-radius:14px;padding:13px 18px;
+      background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;
+      font-weight:800;font-size:13px;
+      box-shadow:0 8px 24px rgba(127,29,29,.35);
+      z-index:5;cursor:pointer;
+      transition:transform .2s ease,box-shadow .2s ease;
+      display:none;align-items:center;gap:8px
+    }
+    .install:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(127,29,29,.45)}
+    .install.show{display:flex}
+    @media (max-width:480px){
+      .brand-subtitle{display:none}
+      .open-new-tab span{display:none}
+      .open-new-tab{padding:6px 10px}
+      .install{right:12px;bottom:12px;padding:11px 14px;font-size:12px}
+    }
   </style>
 </head>
 <body>
   <main class="app">
-    <header class="topbar"><span class="brand">POS UMKM</span><span id="status" class="status">Menghubungkan...</span></header>
-    <iframe id="appFrame" class="frame" title="POS UMKM" allow="camera; microphone"></iframe>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r" alt="Logo KKN" onerror="this.parentElement.innerHTML='🏪'">
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">POS UMKM</span>
+          <span class="brand-subtitle">Program KKN</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <a href="#" id="openNewTab" class="open-new-tab" target="_blank" rel="noopener">
+          <span>🔗</span><span>Buka Tab Baru</span>
+        </a>
+        <span id="status" class="status">
+          <span class="status-dot"></span>
+          <span>Menghubungkan...</span>
+        </span>
+      </div>
+    </header>
+
+    <div class="frame-wrap">
+      <div id="loader" class="loader">
+        <div class="loader-logo">
+          <img src="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r" alt="" onerror="this.parentElement.innerHTML='🏪'">
+        </div>
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Memuat aplikasi...</div>
+        <div class="loader-sub">Mohon tunggu sebentar</div>
+      </div>
+
+      <div id="errorCard" class="error-card" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px)">
+        <div class="error-icon">⚠️</div>
+        <div class="error-title">Aplikasi tidak dapat dimuat</div>
+        <div class="error-msg">Kemungkinan koneksi internet bermasalah atau server sedang sibuk. Silakan coba lagi atau buka di tab baru.</div>
+        <div class="error-actions">
+          <button class="btn btn-primary" onclick="location.reload()">🔄 Coba Lagi</button>
+          <a id="errorOpenTab" class="btn btn-secondary" href="#" target="_blank" rel="noopener">🔗 Buka Tab Baru</a>
+        </div>
+      </div>
+
+      <iframe id="appFrame" class="frame" title="POS UMKM" allow="camera; microphone; geolocation"></iframe>
+    </div>
   </main>
-  <button id="install" class="install">Install POS UMKM</button>
+
+  <button id="install" class="install">
+    <span>📲</span>
+    <span>Install Aplikasi</span>
+  </button>
+
   <script>
-    // Ganti URL ini dengan URL Web App Apps Script terbaru Anda.
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFg3hwNpiYVvWOd7Fjime1i3hx3W9pOPEuuSqtkiW3gRIVm6ZAnWBZV1r7WV5zaf6xuQ/exec';
+    // ⚠️ GANTI URL INI dengan URL Web App Apps Script terbaru Anda
+    // (Deploy → Manage deployments → Copy URL)
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz2wWC1rPQH5NGyMUI4-dmSA8oECg7j0OA8APopMOpLUlzZnjj9G8GfL1C8Fb1h1rilRg/exec';
+
     const frame = document.getElementById('appFrame');
-    const status = document.getElementById('status');
+    const statusEl = document.getElementById('status');
+    const loader = document.getElementById('loader');
+    const errorCard = document.getElementById('errorCard');
+    const openNewTab = document.getElementById('openNewTab');
+    const errorOpenTab = document.getElementById('errorOpenTab');
+
+    // Set URL untuk tombol "Buka di tab baru"
+    openNewTab.href = APPS_SCRIPT_URL;
+    errorOpenTab.href = APPS_SCRIPT_URL;
+
+    // Load aplikasi
     frame.src = APPS_SCRIPT_URL;
-    function updateStatus(){
+
+    // Hide loader saat iframe selesai dimuat
+    frame.addEventListener('load', () => {
+      loader.classList.add('hidden');
+    });
+
+    // Tampilkan error jika iframe gagal dimuat dalam 15 detik
+    const loadTimeout = setTimeout(() => {
+      if (!loader.classList.contains('hidden')) {
+        loader.classList.add('hidden');
+        errorCard.classList.add('show');
+      }
+    }, 15000);
+
+    frame.addEventListener('load', () => clearTimeout(loadTimeout));
+
+    // Update status online/offline
+    function updateStatus() {
       const online = navigator.onLine;
-      status.textContent = online ? 'Online' : 'Offline';
-      status.classList.toggle('offline', !online);
+      const textEl = statusEl.querySelector('span:last-child');
+      textEl.textContent = online ? 'Online' : 'Offline';
+      statusEl.classList.toggle('offline', !online);
     }
-    window.addEventListener('online', updateStatus);
+
+    window.addEventListener('online', () => {
+      updateStatus();
+      // Reload iframe saat kembali online jika sebelumnya offline
+      if (errorCard.classList.contains('show')) {
+        errorCard.classList.remove('show');
+        loader.classList.remove('hidden');
+        frame.src = APPS_SCRIPT_URL;
+      }
+    });
     window.addEventListener('offline', updateStatus);
     updateStatus();
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(console.warn);
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(err => {
+        console.warn('SW registration failed:', err);
+      });
+    }
+
+    // PWA install prompt
     let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt=e; document.getElementById('install').style.display='block'; });
-    document.getElementById('install').onclick = async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; document.getElementById('install').style.display='none'; };
+    const installBtn = document.getElementById('install');
+
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.classList.add('show');
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        installBtn.classList.remove('show');
+      }
+      deferredPrompt = null;
+    });
+
+    // Hide install button setelah ter-install
+    window.addEventListener('appinstalled', () => {
+      installBtn.classList.remove('show');
+    });
   </script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 {
-  "name": "POS UMKM",
-  "short_name": "POS UMKM",
-  "description": "Sistem Point of Sales UMKM",
+  "name": "Kasir",
+  "short_name": "Kasir",
+  "description": "Sistem Kasir untuk UMKM",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f1f5f9",
-  "theme_color": "#2563eb",
+  "background_color": "#7f1d1d",
+  "theme_color": "#7f1d1d",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
