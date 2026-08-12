@@ -11,443 +11,104 @@
   <meta name="application-name" content="Aplikasi Kasir">
   <meta name="description" content="Aplikasi Kasir UMKM - Sistem Point of Sales modern untuk toko dan usaha kecil menengah">
   <meta name="author" content="Program KKN">
-  
-  <!-- Open Graph / Social Media -->
+
   <meta property="og:title" content="Aplikasi Kasir UMKM">
   <meta property="og:description" content="Sistem kasir modern untuk UMKM dengan fitur lengkap">
   <meta property="og:type" content="website">
-  
-  <!-- Resource hints untuk performa -->
+
   <link rel="preconnect" href="https://script.google.com">
   <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- PWA Manifest & Icons -->
+
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icon-192.png">
-  <link rel="shortcut icon" href="./icon.svg">
-  
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r">
+
   <title>Aplikasi Kasir - Sistem POS UMKM</title>
-  
+
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    
-    html,body{
-      width:100%;
-      height:100%;
-      font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-      background:#f1f5f9;
-      overflow:hidden;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale
-    }
-    
+    html,body{width:100%;height:100%;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f1f5f9;overflow:hidden;-webkit-font-smoothing:antialiased}
     .app{height:100%;display:flex;flex-direction:column}
-    
-    .topbar{
-      height:56px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 16px;
-      gap:12px;
-      background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#b91c1c 100%);
-      color:#fff;
-      box-shadow:0 2px 12px rgba(127,29,29,.3);
-      z-index:10;
-      position:relative;
-      overflow:hidden
-    }
-    
-    .topbar::before{
-      content:'';
-      position:absolute;
-      inset:0;
-      background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.1),transparent 60%);
-      pointer-events:none
-    }
-    
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:800;
-      letter-spacing:.2px;
-      font-size:16px;
-      z-index:1
-    }
-    
-    .brand-logo{
-      width:36px;
-      height:36px;
-      border-radius:10px;
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow:0 2px 8px rgba(0,0,0,.2);
-      overflow:hidden;
-      padding:3px;
-      flex-shrink:0
-    }
-    
-    .brand-logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain
-    }
-    
-    .brand-text{
-      display:flex;
-      flex-direction:column;
-      line-height:1.1
-    }
-    
-    .brand-title{
-      font-size:16px;
-      font-weight:800;
-      letter-spacing:-.2px
-    }
-    
-    .brand-subtitle{
-      font-size:11px;
-      opacity:.9;
-      font-weight:500;
-      letter-spacing:.3px;
-      text-transform:uppercase
-    }
-    
-    .topbar-actions{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      z-index:1
-    }
-    
-    .status{
-      font-size:11px;
-      font-weight:600;
-      padding:6px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.18);
-      display:flex;
-      align-items:center;
-      gap:6px;
-      transition:all .3s ease;
-      backdrop-filter:blur(8px)
-    }
-    
-    .status-dot{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:#4ade80;
-      box-shadow:0 0 10px #4ade80;
-      animation:pulse-dot 2s ease-in-out infinite
-    }
-    
-    @keyframes pulse-dot{
-      0%,100%{opacity:1;transform:scale(1)}
-      50%{opacity:.7;transform:scale(1.1)}
-    }
-    
-    .status.offline{
-      background:rgba(245,158,11,.95);
-      color:#422006
-    }
-    
-    .status.offline .status-dot{
-      background:#dc2626;
-      box-shadow:0 0 10px #dc2626;
-      animation:none
-    }
-    
-    .open-new-tab{
-      font-size:11px;
-      font-weight:600;
-      padding:8px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.18);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.25);
-      text-decoration:none;
-      display:flex;
-      align-items:center;
-      gap:5px;
-      transition:all .2s ease;
-      backdrop-filter:blur(8px)
-    }
-    
-    .open-new-tab:hover{
-      background:rgba(255,255,255,.28);
-      transform:translateY(-1px)
-    }
-    
-    .open-new-tab:active{
-      transform:translateY(0)
-    }
-    
-    .frame-wrap{
-      flex:1;
-      position:relative;
-      background:#fff;
-      overflow:hidden
-    }
-    
-    .frame{
-      border:0;
-      width:100%;
-      height:100%;
-      background:#fff
-    }
-    
-    .loader{
-      position:absolute;
-      inset:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:24px;
-      background:linear-gradient(135deg,#f8fafc 0%,#fef2f2 100%);
-      z-index:5;
-      transition:opacity .5s ease,visibility .5s ease
-    }
-    
-    .loader.hidden{
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none
-    }
-    
-    .loader-logo{
-      width:80px;
-      height:80px;
-      border-radius:20px;
-      background:#fff;
-      box-shadow:0 10px 30px rgba(127,29,29,.2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:8px;
-      animation:float 3s ease-in-out infinite
-    }
-    
-    @keyframes float{
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-8px)}
-    }
-    
-    .loader-logo img{
-      width:100%;
-      height:100%;
-      object-fit:contain
-    }
-    
-    .loader-spinner{
-      width:36px;
-      height:36px;
-      border-radius:50%;
-      border:3px solid #fecaca;
-      border-top-color:#7f1d1d;
-      animation:spin .8s linear infinite
-    }
-    
-    @keyframes spin{
-      to{transform:rotate(360deg)}
-    }
-    
-    .loader-text{
-      color:#7f1d1d;
-      font-weight:700;
-      font-size:15px;
-      letter-spacing:-.2px
-    }
-    
-    .loader-sub{
-      color:#64748b;
-      font-size:13px;
-      margin-top:-8px
-    }
-    
-    .error-card{
-      background:#fff;
-      border:1px solid #fecaca;
-      border-radius:20px;
-      padding:28px;
-      max-width:440px;
-      box-shadow:0 15px 40px rgba(127,29,29,.15);
-      text-align:center;
-      display:none
-    }
-    
-    .error-card.show{
-      display:block;
-      animation:slideUp .4s ease
-    }
-    
-    @keyframes slideUp{
-      from{opacity:0;transform:translate(-50%,-40%)}
-      to{opacity:1;transform:translate(-50%,-50%)}
-    }
-    
-    .error-icon{
-      width:64px;
-      height:64px;
-      margin:0 auto 16px;
-      border-radius:50%;
-      background:#fef2f2;
-      color:#991b1b;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:32px
-    }
-    
-    .error-title{
-      color:#7f1d1d;
-      font-size:20px;
-      font-weight:800;
-      margin-bottom:8px;
-      letter-spacing:-.3px
-    }
-    
-    .error-msg{
-      color:#64748b;
-      font-size:14px;
-      line-height:1.6;
-      margin-bottom:20px
-    }
-    
-    .error-actions{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap
-    }
-    
-    .btn{
-      padding:12px 20px;
-      border-radius:12px;
-      font-size:14px;
-      font-weight:700;
-      text-decoration:none;
-      border:0;
-      cursor:pointer;
-      transition:all .2s ease;
-      display:inline-flex;
-      align-items:center;
-      gap:8px
-    }
-    
-    .btn:active{
-      transform:scale(.97)
-    }
-    
-    .btn-primary{
-      background:linear-gradient(135deg,#7f1d1d,#991b1b);
-      color:#fff;
-      box-shadow:0 4px 12px rgba(127,29,29,.3)
-    }
-    
-    .btn-primary:hover{
-      background:linear-gradient(135deg,#991b1b,#b91c1c);
-      box-shadow:0 6px 16px rgba(127,29,29,.4);
-      transform:translateY(-1px)
-    }
-    
-    .btn-secondary{
-      background:#f1f5f9;
-      color:#475569;
-      border:1px solid #e2e8f0
-    }
-    
-    .btn-secondary:hover{
-      background:#e2e8f0;
-      transform:translateY(-1px)
-    }
-    
-    .install{
-      display:none;
-      position:fixed;
-      right:16px;
-      bottom:18px;
-      border:0;
-      border-radius:16px;
-      padding:14px 20px;
-      background:linear-gradient(135deg,#7f1d1d,#991b1b);
-      color:#fff;
-      font-weight:800;
-      font-size:14px;
-      box-shadow:0 10px 30px rgba(127,29,29,.4);
-      z-index:20;
-      cursor:pointer;
-      transition:all .3s ease;
-      align-items:center;
-      gap:8px;
-      letter-spacing:-.2px
-    }
-    
-    .install:hover{
-      transform:translateY(-3px);
-      box-shadow:0 15px 40px rgba(127,29,29,.5)
-    }
-    
-    .install:active{
-      transform:translateY(-1px)
-    }
-    
-    .install.show{
-      display:flex;
-      animation:slideIn .5s ease
-    }
-    
-    @keyframes slideIn{
-      from{opacity:0;transform:translateY(20px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-    
+
+    .topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:12px;background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#b91c1c 100%);color:#fff;box-shadow:0 2px 12px rgba(127,29,29,.3);z-index:10;position:relative;overflow:hidden}
+    .topbar::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.1),transparent 60%);pointer-events:none}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;z-index:1}
+    .brand-logo{width:36px;height:36px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2);overflow:hidden;padding:3px;flex-shrink:0}
+    .brand-logo img{width:100%;height:100%;object-fit:contain}
+    .brand-text{display:flex;flex-direction:column;line-height:1.1}
+    .brand-title{font-size:16px;font-weight:800;letter-spacing:-.2px}
+    .brand-subtitle{font-size:11px;opacity:.9;font-weight:500;letter-spacing:.3px;text-transform:uppercase}
+
+    .topbar-actions{display:flex;align-items:center;gap:8px;z-index:1}
+    .status{font-size:11px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.18);display:flex;align-items:center;gap:6px;transition:all .3s ease;backdrop-filter:blur(8px)}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;animation:pulse-dot 2s ease-in-out infinite}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.1)}}
+    .status.offline{background:rgba(245,158,11,.95);color:#422006}
+    .status.offline .status-dot{background:#dc2626;box-shadow:0 0 10px #dc2626;animation:none}
+
+    .frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
+    .frame{border:0;width:100%;height:100%;background:#fff}
+
+    .loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:linear-gradient(135deg,#f8fafc 0%,#fef2f2 100%);z-index:5;transition:opacity .5s ease,visibility .5s ease}
+    .loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .loader-logo{width:80px;height:80px;border-radius:20px;background:#fff;box-shadow:0 10px 30px rgba(127,29,29,.2);display:flex;align-items:center;justify-content:center;padding:8px;animation:float 3s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .loader-logo img{width:100%;height:100%;object-fit:contain}
+    .loader-spinner{width:36px;height:36px;border-radius:50%;border:3px solid #fecaca;border-top-color:#7f1d1d;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loader-text{color:#7f1d1d;font-weight:700;font-size:15px}
+    .loader-sub{color:#64748b;font-size:13px;margin-top:-8px}
+
+    .error-card{background:#fff;border:1px solid #fecaca;border-radius:20px;padding:28px;max-width:440px;box-shadow:0 15px 40px rgba(127,29,29,.15);text-align:center;display:none}
+    .error-card.show{display:block;animation:slideUp .4s ease}
+    @keyframes slideUp{from{opacity:0;transform:translate(-50%,-40%)}to{opacity:1;transform:translate(-50%,-50%)}}
+    .error-icon{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;font-size:32px}
+    .error-title{color:#7f1d1d;font-size:20px;font-weight:800;margin-bottom:8px}
+    .error-msg{color:#64748b;font-size:14px;line-height:1.6;margin-bottom:20px}
+    .error-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+    .btn{padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;border:0;cursor:pointer;transition:all .2s ease;display:inline-flex;align-items:center;gap:8px}
+    .btn:active{transform:scale(.97)}
+    .btn-primary{background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;box-shadow:0 4px 12px rgba(127,29,29,.3)}
+    .btn-primary:hover{background:linear-gradient(135deg,#991b1b,#b91c1c);transform:translateY(-1px)}
+    .btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+
+    .install{display:none;position:fixed;right:16px;bottom:18px;border:0;border-radius:16px;padding:14px 20px;background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;font-weight:800;font-size:14px;box-shadow:0 10px 30px rgba(127,29,29,.4);z-index:20;cursor:pointer;transition:all .3s ease;align-items:center;gap:8px}
+    .install:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(127,29,29,.5)}
+    .install.show{display:flex;animation:slideIn .5s ease}
+    @keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Modal panduan install */
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+    .modal.show{display:flex}
+    .modal-card{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:24px;box-shadow:0 25px 60px rgba(0,0,0,.3);animation:modalIn .3s ease}
+    @keyframes modalIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .modal-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+    .modal-head h2{font-size:18px;color:#7f1d1d;font-weight:800;flex:1}
+    .modal-close{border:0;background:#f1f5f9;width:32px;height:32px;border-radius:10px;cursor:pointer;font-size:14px;color:#475569}
+    .modal-sub{color:#64748b;font-size:13px;line-height:1.5;margin-bottom:14px}
+    .modal-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+    .step{background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:10px 12px;font-size:13px;color:#7f1d1d;line-height:1.5;text-align:left}
+    .modal-btn{width:100%;justify-content:center}
+
     @media (max-width:480px){
       .brand-subtitle{display:none}
       .brand-title{font-size:15px}
       .brand-logo{width:32px;height:32px}
-      
-      .open-new-tab span:last-child{display:none}
-      .open-new-tab{padding:8px 12px}
-      
-      .install{
-        right:12px;
-        bottom:12px;
-        padding:12px 16px;
-        font-size:13px
-      }
-      
+      .install{right:12px;bottom:12px;padding:12px 16px;font-size:13px}
       .topbar{padding:0 12px}
     }
-    
-    @media (min-width:768px) and (max-width:1024px){
-      .topbar{padding:0 24px}
-      .brand-title{font-size:17px}
-    }
-    
     @media (prefers-color-scheme:dark){
       html,body{background:#0f172a}
       .loader{background:linear-gradient(135deg,#1e293b 0%,#1c1917 100%)}
       .loader-text{color:#fecaca}
       .loader-sub{color:#94a3b8}
     }
-    
     @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        animation-duration:.01ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.01ms !important
-      }
+      *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
     }
   </style>
 </head>
@@ -456,27 +117,14 @@
     <header class="topbar" role="banner">
       <div class="brand">
         <div class="brand-logo" aria-hidden="true">
-          <img src="./icon.svg" 
-               alt="Logo Aplikasi Kasir" 
-               onerror="this.parentElement.innerHTML='🏪'">
+          <img src="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r" alt="Logo" onerror="this.parentElement.innerHTML='🏪'">
         </div>
         <div class="brand-text">
           <span class="brand-title">Aplikasi Kasir</span>
           <span class="brand-subtitle">Sistem POS UMKM</span>
         </div>
       </div>
-      
       <div class="topbar-actions">
-        <a href="#" 
-           id="openNewTab" 
-           class="open-new-tab" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           aria-label="Buka aplikasi di tab baru">
-          <span aria-hidden="true">🔗</span>
-          <span>Tab Baru</span>
-        </a>
-        
         <span id="status" class="status" role="status" aria-live="polite">
           <span class="status-dot" aria-hidden="true"></span>
           <span>Menghubungkan...</span>
@@ -485,59 +133,51 @@
     </header>
 
     <div class="frame-wrap">
-      <div id="loader" class="loader" role="alert" aria-busy="true" aria-label="Memuat aplikasi">
+      <div id="loader" class="loader" aria-busy="true" aria-label="Memuat aplikasi">
         <div class="loader-logo" aria-hidden="true">
-          <img src="./icon.svg" 
-               alt="" 
-               onerror="this.parentElement.innerHTML='🏪'">
+          <img src="https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r" alt="" onerror="this.parentElement.innerHTML='🏪'">
         </div>
         <div class="loader-spinner" aria-hidden="true"></div>
         <div class="loader-text">Memuat Aplikasi Kasir...</div>
         <div class="loader-sub">Mohon tunggu sebentar</div>
       </div>
 
-      <div id="errorCard" 
-           class="error-card" 
-           role="alert"
-           style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px)">
+      <div id="errorCard" class="error-card" role="alert" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px)">
         <div class="error-icon" aria-hidden="true">⚠️</div>
         <div class="error-title">Aplikasi tidak dapat dimuat</div>
-        <div class="error-msg">
-          Kemungkinan koneksi internet bermasalah atau server sedang sibuk. 
-          Silakan coba lagi atau buka di tab baru.
-        </div>
+        <div class="error-msg">Kemungkinan koneksi internet bermasalah atau server sedang sibuk. Silakan coba lagi.</div>
         <div class="error-actions">
-          <button class="btn btn-primary" 
-                  onclick="location.reload()"
-                  aria-label="Coba muat ulang aplikasi">
-            🔄 Coba Lagi
-          </button>
-          <a id="errorOpenTab" 
-             class="btn btn-secondary" 
-             href="#" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             aria-label="Buka aplikasi di tab baru">
-            🔗 Buka Tab Baru
-          </a>
+          <button class="btn btn-primary" onclick="location.reload()">🔄 Coba Lagi</button>
+          <a id="errorOpenTab" class="btn btn-secondary" href="#" target="_blank" rel="noopener noreferrer">🔗 Buka Tab Baru</a>
         </div>
       </div>
 
-      <iframe id="appFrame" 
-              class="frame" 
-              title="Aplikasi Kasir UMKM" 
-              allow="camera; microphone; geolocation"
-              aria-label="Aplikasi Kasir">
-      </iframe>
+      <iframe id="appFrame" class="frame" title="Aplikasi Kasir UMKM" allow="camera; microphone; geolocation"></iframe>
     </div>
   </main>
 
-  <button id="install" 
-          class="install"
-          aria-label="Install aplikasi ke perangkat">
+  <button id="install" class="install" aria-label="Install aplikasi ke perangkat">
     <span aria-hidden="true">📲</span>
     <span>Install Aplikasi</span>
   </button>
+
+  <!-- Modal panduan install (fallback) -->
+  <div id="installModal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <span aria-hidden="true">📲</span>
+        <h2>Install Aplikasi</h2>
+        <button id="closeModal" class="modal-close" aria-label="Tutup">✕</button>
+      </div>
+      <p class="modal-sub">Pasang aplikasi agar bisa dibuka dari layar utama seperti aplikasi biasa:</p>
+      <div class="modal-steps">
+        <div class="step">🤖 <b>Android / Chrome:</b> tekan tombol <i>Install</i> di bawah, atau ikon instal di kanan address bar.</div>
+        <div class="step">🍎 <b>iPhone / iPad (Safari):</b> ketuk tombol <i>Bagikan</i> (kotak + panah) → <i>Tambahkan ke Layur Utama / Add to Home Screen</i>.</div>
+        <div class="step">💻 <b>PC / Laptop:</b> klik ikon instal di address bar, atau menu ⋮ → <i>Install page as app…</i></div>
+      </div>
+      <button id="tryInstall" class="btn btn-primary modal-btn">Install Sekarang</button>
+    </div>
+  </div>
 
   <script>
     const CONFIG = {
@@ -552,17 +192,22 @@
       statusEl: document.getElementById('status'),
       loader: document.getElementById('loader'),
       errorCard: document.getElementById('errorCard'),
-      openNewTab: document.getElementById('openNewTab'),
       errorOpenTab: document.getElementById('errorOpenTab'),
-      installBtn: document.getElementById('install')
+      installBtn: document.getElementById('install'),
+      installModal: document.getElementById('installModal'),
+      closeModal: document.getElementById('closeModal'),
+      tryInstall: document.getElementById('tryInstall')
     };
 
     let loadTimeout = null;
     let deferredPrompt = null;
     let isLoading = true;
 
+    function isStandalone(){
+      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
     function init() {
-      elements.openNewTab.href = CONFIG.APPS_SCRIPT_URL;
       elements.errorOpenTab.href = CONFIG.APPS_SCRIPT_URL;
       loadApp();
       setupEventListeners();
@@ -574,145 +219,102 @@
     function loadApp() {
       isLoading = true;
       elements.frame.src = CONFIG.APPS_SCRIPT_URL;
-      
-      loadTimeout = setTimeout(() => {
-        if (isLoading) {
-          showError();
-        }
-      }, CONFIG.LOAD_TIMEOUT);
+      loadTimeout = setTimeout(() => { if (isLoading) showError(); }, CONFIG.LOAD_TIMEOUT);
     }
 
     function setupEventListeners() {
       elements.frame.addEventListener('load', () => {
         isLoading = false;
         elements.loader.classList.add('hidden');
-        elements.loader.setAttribute('aria-busy', 'false');
-        
-        if (loadTimeout) {
-          clearTimeout(loadTimeout);
-          loadTimeout = null;
-        }
+        if (loadTimeout) { clearTimeout(loadTimeout); loadTimeout = null; }
       });
-
-      elements.frame.addEventListener('error', () => {
-        showError();
-      });
-
       window.addEventListener('online', handleOnline);
-      window.addEventListener('offline', handleOffline);
+      window.addEventListener('offline', updateStatus);
     }
 
     function handleOnline() {
       updateStatus();
-      
       if (elements.errorCard.classList.contains('show')) {
         elements.errorCard.classList.remove('show');
         elements.loader.classList.remove('hidden');
-        elements.loader.setAttribute('aria-busy', 'true');
-        
-        setTimeout(() => {
-          loadApp();
-        }, CONFIG.RETRY_DELAY);
+        setTimeout(loadApp, CONFIG.RETRY_DELAY);
       }
-    }
-
-    function handleOffline() {
-      updateStatus();
     }
 
     function updateStatus() {
       const online = navigator.onLine;
       const textEl = elements.statusEl.querySelector('span:last-child');
-      
-      if (textEl) {
-        textEl.textContent = online ? 'Online' : 'Offline';
-      }
-      
+      if (textEl) textEl.textContent = online ? 'Online' : 'Offline';
       elements.statusEl.classList.toggle('offline', !online);
-      elements.statusEl.setAttribute('aria-label', online ? 'Status: Online' : 'Status: Offline');
     }
 
     function showError() {
       isLoading = false;
       elements.loader.classList.add('hidden');
-      elements.loader.setAttribute('aria-busy', 'false');
       elements.errorCard.classList.add('show');
-      
-      if (loadTimeout) {
-        clearTimeout(loadTimeout);
-        loadTimeout = null;
-      }
+      if (loadTimeout) { clearTimeout(loadTimeout); loadTimeout = null; }
     }
 
     function setupServiceWorker() {
-      if (!('serviceWorker' in navigator)) {
-        console.warn('Service Worker tidak didukung');
-        return;
-      }
-
+      if (!('serviceWorker' in navigator)) return;
       window.addEventListener('load', async () => {
         try {
-          const registration = await navigator.serviceWorker.register('./sw.js', {
-            updateViaCache: 'none'
-          });
-
-          console.log('Service Worker terdaftar:', registration.scope);
-
-          setInterval(() => {
-            registration.update();
-          }, CONFIG.SW_UPDATE_INTERVAL);
-
-          let reloading = false;
-          navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (reloading) return;
-            reloading = true;
-            window.location.reload();
-          });
-
-        } catch (error) {
-          console.warn('Gagal mendaftarkan Service Worker:', error);
-        }
+          const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+          setInterval(() => reg.update(), CONFIG.SW_UPDATE_INTERVAL);
+        } catch (e) { console.warn('SW gagal:', e); }
       });
     }
 
     function setupPWAInstall() {
+      // Prompt native (Android/Chrome/Edge)
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         elements.installBtn.classList.add('show');
-        console.log('PWA install prompt tersedia');
-      });
-
-      elements.installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) {
-          console.warn('Install prompt tidak tersedia');
-          return;
-        }
-
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        
-        console.log('User response:', outcome);
-        
-        if (outcome === 'accepted') {
-          elements.installBtn.classList.remove('show');
-        }
-        
-        deferredPrompt = null;
       });
 
       window.addEventListener('appinstalled', () => {
-        console.log('PWA berhasil diinstall');
         elements.installBtn.classList.remove('show');
         deferredPrompt = null;
+      });
+
+      // FALLBACK: jika prompt native tidak muncul (mis. iPhone), tombol tetap tampil
+      setTimeout(() => {
+        if (!isStandalone()) elements.installBtn.classList.add('show');
+      }, 4000);
+
+      elements.installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') elements.installBtn.classList.remove('show');
+          deferredPrompt = null;
+        } else {
+          elements.installModal.classList.add('show'); // panduan manual
+        }
+      });
+
+      elements.tryInstall.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          elements.installModal.classList.remove('show');
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') elements.installBtn.classList.remove('show');
+          deferredPrompt = null;
+        } else {
+          elements.installModal.classList.remove('show');
+        }
+      });
+
+      elements.closeModal.addEventListener('click', () => elements.installModal.classList.remove('show'));
+      elements.installModal.addEventListener('click', (e) => {
+        if (e.target === elements.installModal) elements.installModal.classList.remove('show');
       });
     }
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
+    } else { init(); }
   </script>
 </body>
 </html>

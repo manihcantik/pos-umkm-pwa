@@ -1,13 +1,30 @@
 {
-  "name": "Kasir",
+  "name": "Aplikasi Kasir - Sistem POS UMKM",
   "short_name": "Kasir",
   "description": "Sistem Kasir untuk UMKM",
+  "id": "./",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#7f1d1d",
   "theme_color": "#7f1d1d",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "prefer_related_applications": false,
   "icons": [
-    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    {
+      "src": "https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1Dkawk0ph0ZRGzCaJ8sz5-4dBU97-uO6r",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
   ]
 }
