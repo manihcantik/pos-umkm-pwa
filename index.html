@@ -194,7 +194,7 @@
 
   <script>
     const CONFIG = {
-      APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzTpIdUL0O_SZJOLz8ILrXoV6k11tBMq1JforWCUqGtSYvdDN5-oMpHEaafhH59JaZnYA/exec',
+      APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzx0b_BYGWsjV9KBr5mJH0cC5XokuRSiQ1__W25bergjGSgsU1aVK4TYJNanNF4hptp5Q/exec',
       LOAD_TIMEOUT: 20000,
       RETRY_DELAY: 3000,
       SW_UPDATE_INTERVAL: 5 * 60 * 1000
@@ -215,8 +215,7 @@
     let loadTimeout = null;
     let deferredPrompt = null;
     let isLoading = true;
-    let frameHasLoaded = false;
-    let backRequestPending = false;
+    let frameReady = false;
 
     function isStandalone(){
       return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -239,11 +238,7 @@
 
     function setupEventListeners() {
       elements.frame.addEventListener('load', () => {
-        if (frameHasLoaded && !backRequestPending) {
-          window.history.pushState({ appFrame: true }, '', window.location.href);
-        }
-        frameHasLoaded = true;
-        backRequestPending = false;
+        frameReady = true;
         isLoading = false;
         elements.loader.classList.add('hidden');
         if (loadTimeout) { clearTimeout(loadTimeout); loadTimeout = null; }
@@ -256,10 +251,10 @@
     }
 
     function handleAppBack() {
-      if (!frameHasLoaded) return;
       window.history.pushState({ appFrame: true }, '', window.location.href);
-      backRequestPending = true;
-      elements.frame.contentWindow.postMessage({ type: 'APP_BACK' }, '*');
+      if (frameReady && elements.frame.contentWindow) {
+        elements.frame.contentWindow.postMessage({ type: 'APP_BACK' }, '*');
+      }
     }
 
     function handleOnline() {
