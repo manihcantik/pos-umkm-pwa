@@ -31,7 +31,7 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
-    html,body{width:100%;height:100%;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f1f5f9;overflow:hidden;-webkit-font-smoothing:antialiased;touch-action:auto}
+    html,body{width:100%;height:100%;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f1f5f9;overflow:hidden;-webkit-font-smoothing:antialiased}
     .app{height:100%;min-height:100%;display:flex;flex-direction:column;padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)}
 
     .topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:12px;background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#b91c1c 100%);color:#fff;box-shadow:0 2px 12px rgba(127,29,29,.3);z-index:10;position:relative;overflow:hidden}
@@ -51,7 +51,7 @@
     .status.offline .status-dot{background:#dc2626;box-shadow:0 0 10px #dc2626;animation:none}
 
     .frame-wrap{flex:1;position:relative;background:#fff;overflow:hidden}
-    .frame{border:0;width:100%;height:100%;background:#fff;touch-action:auto}
+    .frame{border:0;width:100%;height:100%;background:#fff}
 
     .loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#4a0d12;color:#fff;z-index:5;transition:opacity .5s ease,visibility .5s ease}
     .loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
@@ -195,7 +195,7 @@
 
   <script>
     const CONFIG = {
-      APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw1Mbk3FvlKWoUPTZ4LGpiQdgyMtlsQcfuH7CPmtSsftUHVHzY7Ixf5Zab0YVUhsGdz/exec',
+      APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxeEJcZarlvwE5TrZiIp9TeafwPlDh7iSYBRNJHkt6vpSd_tucCy2I46ERinxlObZdR/exec',
       LOAD_TIMEOUT: 20000,
       RETRY_DELAY: 3000,
       SW_UPDATE_INTERVAL: 5 * 60 * 1000
@@ -248,13 +248,13 @@
       });
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', updateStatus);
-      window.history.replaceState({ pwaRoot: true }, '', window.location.href);
+      window.history.replaceState({ pwaRoot: true, page: 'dashboard' }, '', window.location.pathname + window.location.search);
       window.addEventListener('message', (event) => {
         if (event.source !== elements.frame.contentWindow) return;
         if (event.data?.type === 'PWA_MODAL_OPEN') {
           if (currentModalOpen) return;
           currentModalOpen = true;
-          window.history.pushState({ pwaNavigation: true, page: currentAppPage, pwaModal: true }, '', window.location.href);
+          window.history.pushState({ pwaNavigation: true, page: currentAppPage, pwaModal: true }, '', historyUrl(currentAppPage, true));
           return;
         }
         if (event.data?.type === 'PWA_MODAL_CLOSE') {
@@ -267,9 +267,15 @@
         const page = String(event.data.page || '');
         if (!page || window.history.state?.page === page) return;
         currentAppPage = page;
-        window.history.pushState({ pwaNavigation: true, page }, '', window.location.href);
+        window.history.pushState({ pwaNavigation: true, page }, '', historyUrl(page));
       });
       window.addEventListener('popstate', handleAppBack);
+    }
+
+    function historyUrl(page, modal = false) {
+      const params = new URLSearchParams({ page });
+      if (modal) params.set('modal', '1');
+      return `${window.location.pathname}${window.location.search}#${params.toString()}`;
     }
 
     function handleAppBack(event) {
