@@ -251,11 +251,13 @@
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', updateStatus);
       window.history.replaceState({ appFrame: true }, '', window.location.href);
+      window.history.pushState({ appFrame: true }, '', window.location.href);
       window.addEventListener('popstate', handleAppBack);
     }
 
     function handleAppBack() {
       if (!frameHasLoaded) return;
+      window.history.pushState({ appFrame: true }, '', window.location.href);
       backRequestPending = true;
       elements.frame.contentWindow.postMessage({ type: 'APP_BACK' }, '*');
     }
