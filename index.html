@@ -215,6 +215,8 @@
     let loadTimeout = null;
     let deferredPrompt = null;
     let isLoading = true;
+    let frameHasLoaded = false;
+    let backRequestPending = false;
 
     function isStandalone(){
       return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -237,12 +239,25 @@
 
     function setupEventListeners() {
       elements.frame.addEventListener('load', () => {
+        if (frameHasLoaded && !backRequestPending) {
+          window.history.pushState({ appFrame: true }, '', window.location.href);
+        }
+        frameHasLoaded = true;
+        backRequestPending = false;
         isLoading = false;
         elements.loader.classList.add('hidden');
         if (loadTimeout) { clearTimeout(loadTimeout); loadTimeout = null; }
       });
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', updateStatus);
+      window.history.replaceState({ appFrame: true }, '', window.location.href);
+      window.addEventListener('popstate', handleAppBack);
+    }
+
+    function handleAppBack() {
+      if (!frameHasLoaded) return;
+      backRequestPending = true;
+      elements.frame.contentWindow.postMessage({ type: 'APP_BACK' }, '*');
     }
 
     function handleOnline() {
