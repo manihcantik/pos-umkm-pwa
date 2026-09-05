@@ -218,6 +218,7 @@
     let isLoading = true;
     let frameReady = false;
     let currentAppPage = 'dashboard';
+    let currentModalOpen = false;
 
     function isStandalone(){
       return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -249,7 +250,20 @@
       window.addEventListener('offline', updateStatus);
       window.history.replaceState({ pwaRoot: true }, '', window.location.href);
       window.addEventListener('message', (event) => {
-        if (event.source !== elements.frame.contentWindow || event.data?.type !== 'PWA_NAVIGATE') return;
+        if (event.source !== elements.frame.contentWindow) return;
+        if (event.data?.type === 'PWA_MODAL_OPEN') {
+          if (currentModalOpen) return;
+          currentModalOpen = true;
+          window.history.pushState({ pwaNavigation: true, page: currentAppPage, pwaModal: true }, '', window.location.href);
+          return;
+        }
+        if (event.data?.type === 'PWA_MODAL_CLOSE') {
+          if (!currentModalOpen) return;
+          currentModalOpen = false;
+          if (window.history.state?.pwaModal) window.history.back();
+          return;
+        }
+        if (event.data?.type !== 'PWA_NAVIGATE') return;
         const page = String(event.data.page || '');
         if (!page || window.history.state?.page === page) return;
         currentAppPage = page;
@@ -259,8 +273,15 @@
     }
 
     function handleAppBack(event) {
+      if (currentModalOpen) {
+        currentModalOpen = false;
+        if (frameReady && elements.frame.contentWindow) {
+          elements.frame.contentWindow.postMessage({ type: 'APP_BACK', modal: true }, '*');
+        }
+        return;
+      }
       const targetPage = event.state?.pwaNavigation ? event.state.page : 'dashboard';
-      if (currentAppPage === 'dashboard' && targetPage === 'dashboard') return;
+      if (targetPage === currentAppPage) return;
       currentAppPage = targetPage;
       if (frameReady && elements.frame.contentWindow) {
         elements.frame.contentWindow.postMessage({ type: 'APP_BACK', page: targetPage }, '*');
