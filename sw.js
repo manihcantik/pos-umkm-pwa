@@ -1,5 +1,5 @@
 /* POS UMKM PWA - Service Worker dengan Auto Update & Fallback */
-const CACHE_NAME = 'pos-umkm-v6';
+const CACHE_NAME = 'pos-umkm-v7';
 const SHELL_ASSETS = [
   './',
   './index.html',
