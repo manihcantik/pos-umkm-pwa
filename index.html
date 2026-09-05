@@ -30,8 +30,9 @@
 
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
+    :root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
     html,body{width:100%;height:100%;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f1f5f9;overflow:hidden;-webkit-font-smoothing:antialiased;touch-action:auto}
-    .app{height:100%;min-height:100%;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+    .app{height:100%;min-height:100%;display:flex;flex-direction:column;padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)}
 
     .topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:12px;background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#b91c1c 100%);color:#fff;box-shadow:0 2px 12px rgba(127,29,29,.3);z-index:10;position:relative;overflow:hidden}
     .topbar::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.1),transparent 60%);pointer-events:none}
@@ -86,13 +87,13 @@
     .btn-primary:hover{background:linear-gradient(135deg,#991b1b,#b91c1c);transform:translateY(-1px)}
     .btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
 
-    .install{display:none;position:fixed;right:16px;bottom:18px;border:0;border-radius:16px;padding:14px 20px;background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;font-weight:800;font-size:14px;box-shadow:0 10px 30px rgba(127,29,29,.4);z-index:20;cursor:pointer;transition:all .3s ease;align-items:center;gap:8px}
+    .install{display:none;position:fixed;right:calc(16px + var(--safe-right));bottom:calc(18px + var(--safe-bottom));border:0;border-radius:16px;padding:14px 20px;background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff;font-weight:800;font-size:14px;box-shadow:0 10px 30px rgba(127,29,29,.4);z-index:20;cursor:pointer;transition:all .3s ease;align-items:center;gap:8px}
     .install:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(127,29,29,.5)}
     .install.show{display:flex;animation:slideIn .5s ease}
     @keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
     /* Modal panduan install */
-    .modal{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:50;display:none;align-items:center;justify-content:center;padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left))}
     .modal.show{display:flex}
     .modal-card{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:24px;box-shadow:0 25px 60px rgba(0,0,0,.3);animation:modalIn .3s ease}
     @keyframes modalIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -108,7 +109,7 @@
       .brand-subtitle{display:none}
       .brand-title{font-size:15px}
       .brand-logo{width:32px;height:32px}
-      .install{right:12px;bottom:12px;padding:12px 16px;font-size:13px}
+      .install{right:calc(12px + var(--safe-right));bottom:calc(12px + var(--safe-bottom));padding:12px 16px;font-size:13px}
       .topbar{padding:0 12px}
     }
     @media (prefers-color-scheme:dark){
@@ -194,7 +195,7 @@
 
   <script>
     const CONFIG = {
-      APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzTCmwBdZgAV0DyNqR3YRyPPlLpjaz3jYRwhM1RxjdcX3zLCtYgLNma91dVHUJFKLyMLQ/exec',
+      APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbx67kwwI83ziwG9m3Gz3OV1skObhbBVW2KWOc9Z-ZRbm16jzAm5WZCjqLB3HAeNB81gHA/exec',
       LOAD_TIMEOUT: 20000,
       RETRY_DELAY: 3000,
       SW_UPDATE_INTERVAL: 5 * 60 * 1000
@@ -216,6 +217,7 @@
     let deferredPrompt = null;
     let isLoading = true;
     let frameReady = false;
+    let currentAppPage = 'dashboard';
 
     function isStandalone(){
       return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -245,15 +247,23 @@
       });
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', updateStatus);
-      window.history.replaceState({ appFrame: true }, '', window.location.href);
-      window.history.pushState({ appFrame: true }, '', window.location.href);
+      window.history.replaceState({ pwaRoot: true }, '', window.location.href);
+      window.addEventListener('message', (event) => {
+        if (event.source !== elements.frame.contentWindow || event.data?.type !== 'PWA_NAVIGATE') return;
+        const page = String(event.data.page || '');
+        if (!page || window.history.state?.page === page) return;
+        currentAppPage = page;
+        window.history.pushState({ pwaNavigation: true, page }, '', window.location.href);
+      });
       window.addEventListener('popstate', handleAppBack);
     }
 
-    function handleAppBack() {
-      window.history.pushState({ appFrame: true }, '', window.location.href);
+    function handleAppBack(event) {
+      const targetPage = event.state?.pwaNavigation ? event.state.page : 'dashboard';
+      if (currentAppPage === 'dashboard' && targetPage === 'dashboard') return;
+      currentAppPage = targetPage;
       if (frameReady && elements.frame.contentWindow) {
-        elements.frame.contentWindow.postMessage({ type: 'APP_BACK' }, '*');
+        elements.frame.contentWindow.postMessage({ type: 'APP_BACK', page: targetPage }, '*');
       }
     }
 
