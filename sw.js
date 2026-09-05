@@ -1,5 +1,5 @@
 /* POS UMKM PWA - Service Worker dengan Auto Update & Fallback */
-const CACHE_NAME = 'pos-umkm-v4';
+const CACHE_NAME = 'pos-umkm-v6';
 const SHELL_ASSETS = [
   './',
   './index.html',
@@ -60,7 +60,8 @@ self.addEventListener('fetch', event => {
   
   // Lewati request ke domain yang tidak boleh di-cache
   const url = new URL(request.url);
-  if (EXCLUDED_DOMAINS.some(domain => url.hostname.includes(domain))) {
+  const isAppsScriptDocument = url.hostname.includes('script.google.com') && request.mode === 'navigate';
+  if (EXCLUDED_DOMAINS.some(domain => url.hostname.includes(domain)) && !isAppsScriptDocument) {
     return; // Biarkan browser handle langsung
   }
   
